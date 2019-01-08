@@ -9,12 +9,20 @@ typedef struct{
 		unsigned char R;
 }RGB;
 
+typedef struct {
+		char nume_piesa;
+		int coloana;
+		int rotatie;
+}date_piesa;
+
 void task1();
 void task2();
+void task3();
+void task4();
 void piesa(int, int, int, int, int, int, int, int, int, int, int, int, int,
 					 char*);
 void init_piesa(fileheader *, infoheader *, RGB **);
-void create(fileheader *, infoheader *, RGB **, char *);
+void print(fileheader *, infoheader *, RGB **, char *);
 void basic_data(fileheader *, infoheader *);
 
 int main(int argc, char *argv[]){
@@ -25,10 +33,10 @@ int main(int argc, char *argv[]){
 		task2();
 	}
 	if(strcmp(argv[1], "3") == 0){
-		//task3();
+		task3();
 	}
 	if(strcmp(argv[1], "4") == 0){
-		//task4();
+		task4();
 	}
 	if(strcmp(argv[1], "bonus") == 0){
 		//bonus();
@@ -71,8 +79,34 @@ void task2(){
 	piesa(50,40,10,40,10,20,20,30,20,30,130,0,255,"piesa_T_270.bmp");
 }
 
-void piesa(int height, int width,int D1i, int D1f, int D2i, int D2f,
-					 int D3i, int D3f, int D4i, int D4f, int R, int G, int B, 
+void task3(){
+	/*
+	citire fisier
+	generare harta neagra + alb deasupra
+	apel functie care baga piese si scrie harta
+	*/
+	int i, nr_piese, map_height, map_width;
+	date_piesa *Piese = (date_piesa *) malloc(50 * sizeof(date_piesa));
+	FILE *input_file = fopen("cerinta3.in","r");
+	fscanf(input_file, "%d %d %d\n", &nr_piese, &map_height, &map_width);
+	printf("%d %d %d\n", nr_piese, map_height, map_width);
+	for(i = 0; i < nr_piese; i++){
+		fscanf(input_file, "%c %d %d\n", &Piese[i].nume_piesa, &Piese[i].coloana,
+					 &Piese[i].rotatie);
+		printf("%c %d %d\n", Piese[i].nume_piesa, Piese[i].coloana, Piese[i].rotatie);
+	}
+	fclose(input_file);
+}
+
+void task4(){
+	/*
+	citire fisier
+	apel functie care baga piese si scrie harta (ca la task 3)
+	*/
+}
+
+void piesa(int height, int width,int H1i, int H1f, int W1i, int W1f,
+					 int H2i, int H2f, int W2i, int W2f, int R, int G, int B, 
 					 char *file_name){
 	int i,j;
 	fileheader *header_piesa = (fileheader *) malloc(sizeof(fileheader));
@@ -84,21 +118,21 @@ void piesa(int height, int width,int D1i, int D1f, int D2i, int D2f,
 		rgb_piesa[i] = (RGB *) malloc(info_piesa->width * sizeof(RGB));
 	}
 	init_piesa(header_piesa, info_piesa, rgb_piesa);
-	for(i = D1i; i < D1f; i++){
-		for(j = D2i; j < D2f; j++){
+	for(i = H1i; i < H1f; i++){
+		for(j = W1i; j < W1f; j++){
 			rgb_piesa[i][j].B = B;
 			rgb_piesa[i][j].G = G;
 			rgb_piesa[i][j].R = R;
 		}
 	}
-	for(i = D3i; i < D3f; i++){
-		for(j = D4i; j < D4f; j++){
+	for(i = H2i; i < H2f; i++){
+		for(j = W2i; j < W2f; j++){
 			rgb_piesa[i][j].B = B;
 			rgb_piesa[i][j].G = G;
 			rgb_piesa[i][j].R = R;
 		}
 	}
-	create(header_piesa, info_piesa, rgb_piesa, file_name);
+	print(header_piesa, info_piesa, rgb_piesa, file_name);
 	for(i = 0; i < info_piesa->height; i++){
 		free(rgb_piesa[i]);
 	}
@@ -122,7 +156,7 @@ void init_piesa(fileheader *header_piesa,
 	}
 }
 
-void create(fileheader *header_piesa,
+void print(fileheader *header_piesa,
 		 infoheader *info_piesa, RGB **rgb_piesa,
 		 char *file_name){
 	int i, j, padding = 0;
@@ -131,10 +165,8 @@ void create(fileheader *header_piesa,
 		padding = 1;
 	}
 	if(padding){
-		/* QUICK FIX*/
 		info_piesa->biSizeImage += 2 * info_piesa->height;
 		header_piesa->bfSize = 54 + info_piesa->biSizeImage;
-		//					//
 	}
 	FILE *file_pointer = fopen(file_name,"wb");
 	fwrite(header_piesa, sizeof(fileheader), 1, file_pointer);
