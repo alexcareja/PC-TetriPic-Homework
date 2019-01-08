@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include "bmp_header.h"
 
 typedef struct{
@@ -9,16 +10,29 @@ typedef struct{
 }RGB;
 
 void task1();
+void task2();
 void piesa(int, int, int, int, int, int, int, int, int, int, int, int, int,
 					 char*);
 void init_piesa(fileheader *, infoheader *, RGB **);
 void create(fileheader *, infoheader *, RGB **, char *);
 void basic_data(fileheader *, infoheader *);
 
-int main(){
-
-	task1();
-	
+int main(int argc, char *argv[]){
+	if(strcmp(argv[1], "1") == 0){
+		task1();
+	}
+	if(strcmp(argv[1], "2") == 0){
+		task2();
+	}
+	if(strcmp(argv[1], "3") == 0){
+		//task3();
+	}
+	if(strcmp(argv[1], "4") == 0){
+		//task4();
+	}
+	if(strcmp(argv[1], "bonus") == 0){
+		//bonus();
+	}
 	return 0;
 }
 
@@ -31,6 +45,30 @@ void task1(){
 	piesa(50,40,10,40,20,30,30,40,10,20,255,0,255,"piesa_J.bmp");
 	piesa(40,50,10,20,10,40,20,30,20,30,130,0,255,"piesa_T.bmp");
 
+}
+
+void task2(){
+	piesa(40,40,10,30,10,30,0,0,0,0,255,255,0,"piesa_O_90.bmp");
+	piesa(40,40,10,30,10,30,0,0,0,0,255,255,0,"piesa_O_180.bmp");
+	piesa(40,40,10,30,10,30,0,0,0,0,255,255,0,"piesa_O_270.bmp");
+	piesa(30,60,10,20,10,50,0,0,0,0,0,0,255,"piesa_I_90.bmp");
+	piesa(60,30,10,50,10,20,0,0,0,0,0,0,255,"piesa_I_180.bmp");
+	piesa(30,60,10,20,10,50,0,0,0,0,0,0,255,"piesa_I_270.bmp");
+	piesa(50,40,10,30,10,20,20,40,20,30,255,0,0,"piesa_S_90.bmp");
+	piesa(40,50,10,20,20,40,20,30,10,30,255,0,0,"piesa_S_180.bmp");
+	piesa(50,40,10,30,10,20,20,40,20,30,255,0,0,"piesa_S_270.bmp");
+	piesa(50,40,10,30,20,30,20,40,10,20,0,255,0,"piesa_Z_90.bmp");
+	piesa(40,50,10,20,10,30,20,30,20,40,0,255,0,"piesa_Z_180.bmp");
+	piesa(50,40,10,30,20,30,20,40,10,20,0,255,0,"piesa_Z_270.bmp");
+	piesa(40,50,10,20,10,40,20,30,10,20,255,140,0,"piesa_L_90.bmp");
+	piesa(50,40,10,20,10,30,20,40,20,30,255,140,0,"piesa_L_180.bmp");
+	piesa(40,50,10,20,30,40,20,30,10,40,255,140,0,"piesa_L_270.bmp");
+	piesa(40,50,10,20,10,20,20,30,10,40,255,0,255,"piesa_J_90.bmp");
+	piesa(50,40,10,20,10,30,20,40,10,20,255,0,255,"piesa_J_180.bmp");
+	piesa(40,50,10,20,10,40,20,30,30,40,255,0,255,"piesa_J_270.bmp");
+	piesa(50,40,10,40,20,30,20,30,10,20,130,0,255,"piesa_T_90.bmp");
+	piesa(40,50,10,20,20,30,20,30,10,40,130,0,255,"piesa_T_180.bmp");
+	piesa(50,40,10,40,10,20,20,30,20,30,130,0,255,"piesa_T_270.bmp");
 }
 
 void piesa(int height, int width,int D1i, int D1f, int D2i, int D2f,
@@ -110,7 +148,6 @@ void create(fileheader *header_piesa,
 		}
 	}
 	fclose(file_pointer);
-	free(file_pointer);
 }
 
 void basic_data(fileheader *header_piesa, infoheader *info_piesa){
