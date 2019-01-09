@@ -83,9 +83,12 @@ void task3(){
 	/*
 	citire fisier
 	generare harta neagra + alb deasupra
+	0 - spatiu liber (negru)
+	-1 - ALB
+	O, I, S, Z, L, J, T - patrat din piesa (mai incolo)
 	apel functie care baga piese si scrie harta
 	*/
-	int i, nr_piese, map_height, map_width;
+	int i, j, nr_piese, map_height, map_width;
 	date_piesa *Piese = (date_piesa *) malloc(50 * sizeof(date_piesa));
 	FILE *input_file = fopen("cerinta3.in","r");
 	fscanf(input_file, "%d %d %d\n", &nr_piese, &map_height, &map_width);
@@ -96,6 +99,22 @@ void task3(){
 		printf("%c %d %d\n", Piese[i].nume_piesa, Piese[i].coloana, Piese[i].rotatie);
 	}
 	fclose(input_file);
+	char **map = (char **) malloc(map_height * sizeof(char *));
+	for (i = 0; i < map_height + 4; i++){
+		map[i] = (char *) malloc(map_width * sizeof(char ));
+		if(i < 4){
+			for(j = 0; j < map_width; j++){
+				map[i][j] = '1';
+			}
+		}
+		else{
+			for(j = 0; j < map_width; j++){
+				map[i][j] = '0';
+			}
+		}
+	for(j = 0; j < map_width; j++){printf("%c ", map[i][j]);}printf("\n");
+	}
+	
 }
 
 void task4(){
