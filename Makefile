@@ -1,7 +1,7 @@
 CC = gcc
 CFLAGS = -Wall
-HEADERS = tasks.h func.h
-OBJECTS = tasks.o func.o tema3.o
+HEADERS = tasks.h func.h pieces.h
+OBJECTS = tasks.o func.o pieces.o tema3.o
 EXEC = exec
 
 .PHONY = default build clean

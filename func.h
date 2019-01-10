@@ -15,9 +15,6 @@ typedef struct {
 		int rotatie;
 }date_piesa;
 
-
-void drop_pieces(char **, int, int, date_piesa *, int);
-
 void piesa(int, int, int, int, int, int, int, int, int, int, int, int, int,
 					 char*);
 
@@ -26,6 +23,8 @@ void init_piesa(fileheader *, infoheader *, RGB **);
 void print(fileheader *, infoheader *, RGB **, char *);
 
 void basic_data(fileheader *, infoheader *);
+
+void drop_pieces(char **, int, int, date_piesa *, int);
 
 
 #endif

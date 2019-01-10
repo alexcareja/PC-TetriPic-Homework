@@ -55,8 +55,8 @@ void task3(){
 	fscanf(input_file, "%d %d %d\n", &nr_piese, &map_height, &map_width);
 	printf("%d %d %d\n", nr_piese, map_height, map_width);
 	for(i = 0; i < nr_piese; i++){
-		fscanf(input_file, "%c %d %d\n", &Piese[i].nume_piesa, &Piese[i].coloana,
-					 &Piese[i].rotatie);
+		fscanf(input_file, "%c %d %d\n", &Piese[i].nume_piesa, &Piese[i].rotatie,
+					 &Piese[i].coloana);
 		//printf("%c %d %d\n", Piese[i].nume_piesa, Piese[i].coloana, Piese[i].rotatie);
 	}
 	fclose(input_file);

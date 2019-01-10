@@ -1,15 +1,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "func.h"
+#include "pieces.h"
 #include "bmp_header.h"
-
-void drop_pieces(char **map, int height, int width, 
-								 date_piesa *Piese, int nr_piese){
-	int i, j, k;
-	for(i = 0; i < nr_piese; i++){
-		
-	}
-}
 
 void piesa(int height, int width,int H1i, int H1f, int W1i, int W1f,
 					 int H2i, int H2f, int W2i, int W2f, int R, int G, int B, 
@@ -103,3 +96,51 @@ void basic_data(fileheader *header_piesa, infoheader *info_piesa){
 	info_piesa->biClrUsed = 0;
 	info_piesa->biClrImportant = 0;
 }
+
+void drop_pieces(char **map, int height, int width, 
+								 date_piesa *Piese, int nr_piese){
+	int i, j, k;
+	char **piesa = (char **) malloc((height + 1) * sizeof(char *));
+	for(i = 0; i < height; i++){
+		piesa[i] = (char *) malloc((width + 1) * sizeof(char));
+	}
+	for(i = 0; i < nr_piese; i++){
+		switch(Piese[i].nume_piesa){
+			case 'O':
+				gen_O(piesa, height, width, Piese[i].coloana, Piese[i].rotatie);
+				break;
+			case 'I':
+				gen_I(piesa, height, width, Piese[i].coloana, Piese[i].rotatie);
+				break;
+			case 'S':
+				gen_S(piesa, height, width, Piese[i].coloana, Piese[i].rotatie);
+				break;
+			case 'Z':
+				gen_Z(piesa, height, width, Piese[i].coloana, Piese[i].rotatie);
+				break;
+			case 'L':
+				gen_L(piesa, height, width, Piese[i].coloana, Piese[i].rotatie);
+				break;
+			case 'J':
+				gen_J(piesa, height, width, Piese[i].coloana, Piese[i].rotatie);
+				break;
+			case 'T':
+				gen_T(piesa, height, width, Piese[i].coloana, Piese[i].rotatie);
+				break;
+
+		}
+		for(j = 0; j < height; j++){
+			for(k = 0; k < width; k++){
+				printf("%c ", piesa[j][k]);
+			}
+			printf("\n");
+		}
+		printf("\n");
+	}
+	for(i = 0; i < height; i++){
+		//free(piesa[i]);
+	}
+	//free(piesa);
+}
+
+
