@@ -315,7 +315,7 @@ void convert_map(char **map, RGB **bit_map, int h, int w){
 							break;
 						default:
 							break;
-		}
+					}
 				}
 			}
 		}
