@@ -56,7 +56,7 @@ void init_piesa(fileheader *header_piesa,
 }
 
 void print(fileheader *header_piesa,
-		 infoheader *info_piesa, RGB **rgb_piesa,
+		 infoheader *info_piesa, RGB **bit_map,
 		 char *file_name){
 	int i, j, padding = 0;
 	short two_bytes = 0;
@@ -72,7 +72,7 @@ void print(fileheader *header_piesa,
 	fwrite(info_piesa, sizeof(infoheader), 1, file_pointer);
 	for (i = info_piesa->height -1; i >= 0; i--){
 		for(j = 0; j < info_piesa->width; j++){
-			fwrite(rgb_piesa[i] + j, sizeof(RGB), 1, file_pointer);
+			fwrite(bit_map[i] + j, sizeof(RGB), 1, file_pointer);
 		}
 		if(padding){
 			fwrite(&two_bytes, sizeof(short), 1, file_pointer);
@@ -97,14 +97,10 @@ void basic_data(fileheader *header_piesa, infoheader *info_piesa){
 	info_piesa->biClrImportant = 0;
 }
 
-void drop_pieces(char **map, int height, int width, 
+void drop_pieces(char **map, char **piesa, int height, int width, 
 								 date_piesa *Piese, int nr_piese){
-	int i, j, k;
-	char **piesa = (char **) malloc((height + 1) * sizeof(char *));
-	for(i = 0; i < height; i++){
-		piesa[i] = (char *) malloc((width + 1) * sizeof(char));
-	}
-	for(i = 0; i < nr_piese; i++){
+	int i, j, k, col, game_over = 0;
+	for(i = 0; (i < nr_piese) && (game_over == 0); i++){
 		switch(Piese[i].nume_piesa){
 			case 'O':
 				gen_O(piesa, height, width, Piese[i].coloana, Piese[i].rotatie);
@@ -127,20 +123,201 @@ void drop_pieces(char **map, int height, int width,
 			case 'T':
 				gen_T(piesa, height, width, Piese[i].coloana, Piese[i].rotatie);
 				break;
-
+			default:
+				break;
+		}
+		col = 0;
+		while(!col){
+			for(j = 0; j < height; j++){
+				for(k = 0; k < width; k++){
+					if ((piesa[j][k] != '0') && (map[j][k] != '0') && (map[j][k] != '1')){
+						col = 1;
+						break;
+					}
+				}
+				if(col){
+					break;
+				}
+			}
+			if(col){
+				break;
+			}
+			if(drop_one_row(piesa, height, width)){
+				break;
+			}
 		}
 		for(j = 0; j < height; j++){
 			for(k = 0; k < width; k++){
-				printf("%c ", piesa[j][k]);
+				if(piesa[j][k] != '0'){
+					if(map[j - col][k] == '1'){
+					game_over = 1;
+					}
+					map[j - col][k] = piesa[j][k];
+				}
 			}
-			printf("\n");
+		}
+	}
+	for(j = 0; j < (height); j++){
+		for(k = 0; k < width; k++){
+			printf("%c ", map[j][k]);
 		}
 		printf("\n");
 	}
-	for(i = 0; i < height; i++){
-		//free(piesa[i]);
+	printf("\n");
+	elim_lines(map, height, width);
+	for(j = 0; j < (height); j++){
+		for(k = 0; k < width; k++){
+			printf("%c ", map[j][k]);
+		}
+		printf("\n");
 	}
-	//free(piesa);
+	print_map(map, height, width);
+}
+
+int drop_one_row(char **piesa, int h, int w){
+	int i, j, last_row, first_row;
+	last_row = -1;
+	for(i = h - 1; i >= 0; i--){
+		for(j = 0; j < w; j++){
+			if(piesa[i][j] != '0'){
+				if(i == (h - 1)){ //daca e deja pe ultima linie
+					return 1;
+				}
+				last_row = i;
+				break;
+			}
+		}
+		if(last_row != -1){
+			break;
+		}
+	}
+	first_row = -1;
+	for(i = 0; i < h; i++){
+		for(j = 0; j < w; j++){
+			if(piesa[i][j] != '0'){
+				first_row = i;
+				break;
+			}
+		}
+		if(first_row != -1){
+			break;
+		}
+	}
+	for(i = last_row; i >= first_row; i--){
+		for(j = 0; j < w; j++){
+			piesa[i+1][j] = piesa[i][j];
+		}
+	}
+	for(j = 0; j < w; j++){
+		piesa[first_row][j] = '0';
+	}
+	return 0;
+}
+
+void elim_lines(char **map, int h, int w){
+	int i, j, k, full_line = 1;
+	for(i = 4; i < h; i++, full_line = 1){
+		for(j = 0; j < w; j++){
+			if(map[i][j] == '0'){
+				full_line = 0;
+				break;
+			}
+		}
+		if(full_line){
+			while(i > 4){
+				for(k = 0; k < w; k++){
+					map[i][k] = map[i-1][k];
+				}
+				i--;
+			}
+			for(k = 0; k < w; k++){
+				map[i][k] = '0';
+			}
+		}
+	}
+}
+
+void print_map(char **map, int h, int w){
+	int i;
+	fileheader *header_img = (fileheader *) malloc(sizeof(fileheader));
+	infoheader *info_img = (infoheader *) malloc(sizeof(infoheader));
+	info_img->height = 10 * h;
+	info_img->width = 10 * w;
+	RGB **bit_map = (RGB **) malloc(info_img->height * sizeof(RGB *));
+	for(i = 0; i < info_img->height; i++){
+		bit_map[i] = (RGB *) malloc(info_img->width * sizeof(RGB));
+	}
+	convert_map(map, bit_map, h, w);
+	info_img->biSizeImage = info_img->height * info_img->width * 3;
+	header_img->bfSize = 54 + info_img->biSizeImage;
+  basic_data(header_img, info_img);
+	print(header_img, info_img, bit_map, "task3.bmp");
+	for(i = 0; i < info_img->height; i++){
+		free(bit_map[i]);
+	}
+	free(bit_map);
+	free(header_img);
+	free(info_img);
 }
 
 
+void convert_map(char **map, RGB **bit_map, int h, int w){
+	int i,j,k,l;
+	for(i = 0; i < h; i++){
+		for(j = 0; j < w; j++){
+			for(k = 10 * i; k < 10 * (i + 1); k++){
+				for(l = 10 * j; l < 10 * (j + 1); l++){
+					switch(map[i][j]){
+						case '1':
+							bit_map[k][l].B = 255;
+							bit_map[k][l].G = 255;
+							bit_map[k][l].R = 255;
+							break;
+						case '0':
+							bit_map[k][l].B = 0;
+							bit_map[k][l].G = 0;
+							bit_map[k][l].R = 0;
+							break;
+						case 'O':
+							bit_map[k][l].B = 0;
+							bit_map[k][l].G = 255;
+							bit_map[k][l].R = 255;
+							break;
+						case 'I':
+							bit_map[k][l].B = 255;
+							bit_map[k][l].G = 0;
+							bit_map[k][l].R = 0;
+							break;
+						case 'S':
+							bit_map[k][l].B = 0;
+							bit_map[k][l].G = 0;
+							bit_map[k][l].R = 255;
+							break;
+						case 'Z':
+							bit_map[k][l].B = 0;
+							bit_map[k][l].G = 255;
+							bit_map[k][l].R = 0;
+							break;
+						case 'L':
+							bit_map[k][l].B = 0;
+							bit_map[k][l].G = 140;
+							bit_map[k][l].R = 255;
+							break;
+						case 'J':
+							bit_map[k][l].B = 255;
+							bit_map[k][l].G = 0;
+							bit_map[k][l].R = 255;
+							break;
+						case 'T':
+							bit_map[k][l].B = 255;
+							bit_map[k][l].G = 0;
+							bit_map[k][l].R = 130;
+							break;
+						default:
+							break;
+		}
+				}
+			}
+		}
+	}
+}

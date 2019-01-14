@@ -45,7 +45,7 @@ void task3(){
 	citire fisier
 	generare harta neagra + alb deasupra
 	0 - spatiu liber (negru)
-	-1 - ALB
+	1 - ALB
 	O, I, S, Z, L, J, T - patrat din piesa (mai incolo)
 	apel functie care baga piese si scrie harta
 	*/
@@ -53,16 +53,16 @@ void task3(){
 	date_piesa *Piese = (date_piesa *) malloc(50 * sizeof(date_piesa));
 	FILE *input_file = fopen("cerinta3.in","r");
 	fscanf(input_file, "%d %d %d\n", &nr_piese, &map_height, &map_width);
-	printf("%d %d %d\n", nr_piese, map_height, map_width);
+	//printf("%d %d %d\n", nr_piese, map_height, map_width);
 	for(i = 0; i < nr_piese; i++){
 		fscanf(input_file, "%c %d %d\n", &Piese[i].nume_piesa, &Piese[i].rotatie,
 					 &Piese[i].coloana);
 		//printf("%c %d %d\n", Piese[i].nume_piesa, Piese[i].coloana, Piese[i].rotatie);
 	}
 	fclose(input_file);
-	char **map = (char **) malloc(map_height * sizeof(char *));
+	char **map = (char **) malloc((map_height + 5) * sizeof(char *));
 	for (i = 0; i < map_height + 4; i++){
-		map[i] = (char *) malloc(map_width * sizeof(char ));
+		map[i] = (char *) malloc((map_width + 1) * sizeof(char ));
 		if(i < 4){
 			for(j = 0; j < map_width; j++){
 				map[i][j] = '1';
@@ -74,7 +74,11 @@ void task3(){
 			}
 		}
 	}
-	drop_pieces(map, map_height, map_width, Piese, nr_piese);
+	char **piesa = (char **) malloc((map_height + 5) * sizeof(char *));
+	for(i = 0; i < map_height + 4; i++){
+		piesa[i] = (char *) malloc((map_width + 1) * sizeof(char));
+	}
+	drop_pieces(map, piesa, map_height + 4, map_width, Piese, nr_piese);
 }
 
 void task4(){

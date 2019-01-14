@@ -25,12 +25,12 @@ void gen_I(char **piesa, int h, int w, int col, int rot){
 	}
 	if (rot % 180){
 		for(i = 0; i < 4; i++){
-			piesa[i][col] = 'I';
+			piesa[0][col + i] = 'I';
 		}
 	}
 	else{
 		for(i = 0; i < 4; i++){
-			piesa[0][i] = 'I';
+			piesa[i][col] = 'I';
 		}
 	}
 }

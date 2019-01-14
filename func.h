@@ -24,7 +24,15 @@ void print(fileheader *, infoheader *, RGB **, char *);
 
 void basic_data(fileheader *, infoheader *);
 
-void drop_pieces(char **, int, int, date_piesa *, int);
+void drop_pieces(char **, char**, int, int, date_piesa *, int);
+
+int drop_one_row(char **, int, int);
+
+void elim_lines(char **, int , int );
+
+void print_map(char **, int, int);
+
+void convert_map(char **, RGB **, int, int);
 
 
 #endif
