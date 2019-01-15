@@ -42,12 +42,9 @@ void task2(){
 
 void task3(){
 	/*
-	citire fisier
-	generare harta neagra + alb deasupra
 	0 - spatiu liber (negru)
 	1 - ALB
-	O, I, S, Z, L, J, T - patrat din piesa (mai incolo)
-	apel functie care baga piese si scrie harta
+	O, I, S, Z, L, J, T - patrat colorat din piesa
 	*/
 	int i, j, nr_piese, map_height, map_width;
 	date_piesa *Piese = (date_piesa *) malloc(50 * sizeof(date_piesa));
@@ -77,13 +74,12 @@ void task3(){
 		piesa[i] = (char *) malloc((map_width + 1) * sizeof(char));
 	}
 	drop_pieces(map, piesa, map_height + 4, map_width, Piese, nr_piese, 3);
+	for (i = 0; i < map_height + 4; i++){
+		free(map[i]);
+	}
 }
 
 void task4(){
-	/*
-	citire fisier
-	apel functie care baga piese si scrie harta (ca la task 3)
-	*/
 	int i, j, nr_piese, map_height, map_width;
 	date_piesa *Piese = (date_piesa *) malloc(50 * sizeof(date_piesa));
 	fileheader *header_harta = (fileheader *) malloc(sizeof(fileheader));
@@ -188,6 +184,14 @@ void task4(){
 		piesa[i] = (char *) malloc((map_width + 1) * sizeof(char));
 	}
 	drop_pieces(map, piesa, map_height , map_width, Piese, nr_piese, 4);
+	for(i = 0; i < info_harta->height; i++){
+		free(bit_map[i]);
+	}
+	free(bit_map);
+	for(i = 0; i < map_height; i++){
+		free(map[i]);
+	}
+	free(map);
 }
 
 void bonus(){

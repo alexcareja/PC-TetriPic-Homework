@@ -34,5 +34,6 @@ void print_map(char **, int, int, int);
 
 void convert_map(char **, RGB **, int, int);
 
+void rgbwrite(RGB **, int, int, char, char, char);
 
 #endif

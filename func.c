@@ -268,49 +268,31 @@ void convert_map(char **map, RGB **bit_map, int h, int w){
 				for(l = 10 * j; l < 10 * (j + 1); l++){
 					switch(map[i][j]){
 						case '1':
-							bit_map[k][l].B = 255;
-							bit_map[k][l].G = 255;
-							bit_map[k][l].R = 255;
+							rgbwrite(bit_map, k, l, 255, 255, 255);
 							break;
 						case '0':
-							bit_map[k][l].B = 0;
-							bit_map[k][l].G = 0;
-							bit_map[k][l].R = 0;
+							rgbwrite(bit_map, k, l, 0, 0, 0);
 							break;
 						case 'O':
-							bit_map[k][l].B = 0;
-							bit_map[k][l].G = 255;
-							bit_map[k][l].R = 255;
+							rgbwrite(bit_map, k, l, 255, 255, 0);
 							break;
 						case 'I':
-							bit_map[k][l].B = 255;
-							bit_map[k][l].G = 0;
-							bit_map[k][l].R = 0;
+							rgbwrite(bit_map, k, l, 0, 0, 255);
 							break;
 						case 'S':
-							bit_map[k][l].B = 0;
-							bit_map[k][l].G = 0;
-							bit_map[k][l].R = 255;
+							rgbwrite(bit_map, k, l, 255, 0, 0);
 							break;
 						case 'Z':
-							bit_map[k][l].B = 0;
-							bit_map[k][l].G = 255;
-							bit_map[k][l].R = 0;
+							rgbwrite(bit_map, k, l, 0, 255, 0);
 							break;
 						case 'L':
-							bit_map[k][l].B = 0;
-							bit_map[k][l].G = 140;
-							bit_map[k][l].R = 255;
+							rgbwrite(bit_map, k, l, 255, 140, 0);
 							break;
 						case 'J':
-							bit_map[k][l].B = 255;
-							bit_map[k][l].G = 0;
-							bit_map[k][l].R = 255;
+							rgbwrite(bit_map, k, l, 255, 0, 255);
 							break;
 						case 'T':
-							bit_map[k][l].B = 255;
-							bit_map[k][l].G = 0;
-							bit_map[k][l].R = 130;
+							rgbwrite(bit_map, k, l, 130, 0, 255);
 							break;
 						default:
 							break;
@@ -319,4 +301,10 @@ void convert_map(char **map, RGB **bit_map, int h, int w){
 			}
 		}
 	}
+}
+
+void rgbwrite(RGB **bit_map, int i, int j, char R, char G, char B){
+	bit_map[i][j].B = B;
+	bit_map[i][j].G = G;
+	bit_map[i][j].R = R;
 }
