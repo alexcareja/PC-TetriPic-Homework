@@ -98,7 +98,7 @@ void basic_data(fileheader *header_piesa, infoheader *info_piesa){
 }
 
 void drop_pieces(char **map, char **piesa, int height, int width, 
-								 date_piesa *Piese, int nr_piese){
+								 date_piesa *Piese, int nr_piese, int task){
 	int i, j, k, col, game_over = 0;
 	for(i = 0; (i < nr_piese) && (game_over == 0); i++){
 		switch(Piese[i].nume_piesa){
@@ -156,22 +156,16 @@ void drop_pieces(char **map, char **piesa, int height, int width,
 				}
 			}
 		}
+		elim_lines(map, height, width);
 	}
-	for(j = 0; j < (height); j++){
+	for(j = 0; j < height; j++){
 		for(k = 0; k < width; k++){
 			printf("%c ", map[j][k]);
 		}
 		printf("\n");
 	}
 	printf("\n");
-	elim_lines(map, height, width);
-	for(j = 0; j < (height); j++){
-		for(k = 0; k < width; k++){
-			printf("%c ", map[j][k]);
-		}
-		printf("\n");
-	}
-	print_map(map, height, width);
+	print_map(map, height, width, task);
 }
 
 int drop_one_row(char **piesa, int h, int w){
@@ -237,7 +231,7 @@ void elim_lines(char **map, int h, int w){
 	}
 }
 
-void print_map(char **map, int h, int w){
+void print_map(char **map, int h, int w, int task){
 	int i;
 	fileheader *header_img = (fileheader *) malloc(sizeof(fileheader));
 	infoheader *info_img = (infoheader *) malloc(sizeof(infoheader));
@@ -251,7 +245,12 @@ void print_map(char **map, int h, int w){
 	info_img->biSizeImage = info_img->height * info_img->width * 3;
 	header_img->bfSize = 54 + info_img->biSizeImage;
   basic_data(header_img, info_img);
-	print(header_img, info_img, bit_map, "task3.bmp");
+	if(task == 3){
+		print(header_img, info_img, bit_map, "task3.bmp");
+	}
+	if(task == 4){
+		print(header_img, info_img, bit_map, "task4.bmp");
+	}
 	for(i = 0; i < info_img->height; i++){
 		free(bit_map[i]);
 	}

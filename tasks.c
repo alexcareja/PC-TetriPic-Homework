@@ -176,18 +176,18 @@ void task4(){
 				map[map_height - 1 - i][j] = 'T';
 			}
 		}
-	}
-	/*for(i = 0; i < map_height; i++){
+	}/*
+	for(i = 0; i < map_height; i++){
 		for(j = 0; j < map_width; j++){
 			printf("%c ",map[i][j]);
 		}
 		printf("\n");
 	}*/
-	char **piesa = (char **) malloc((map_height + 5) * sizeof(char *));
+	char **piesa = (char **) malloc((map_height + 1) * sizeof(char *));
 	for(i = 0; i < map_height + 4; i++){
 		piesa[i] = (char *) malloc((map_width + 1) * sizeof(char));
 	}
-	drop_pieces(map, piesa, map_height + 4, map_width, Piese, nr_piese, 4);
+	drop_pieces(map, piesa, map_height , map_width, Piese, nr_piese, 4);
 }
 
 void bonus(){
